@@ -7,20 +7,20 @@ public class TennisMain {
 		String player1 = "leek";
 		String player2 = "lily";
 		
-		TennisGame1 game = new TennisGame1();
+		TennisGameImpl game = new TennisGameImpl(player1, player2);
 		playGame(game);
 		
 	}
 
     public static void playGame(TennisGame tennisGame) {
 
-    	Random random = new Random();
+    	Random random = new Random(42);
     
     	while(!tennisGame.isEnd()) {
     	    if(random.nextBoolean()) {
-    	    	tennisGame.wonPoint("player1");
+    	    	tennisGame.wonPoint("leek");
     	    } else {
-    	    	tennisGame.wonPoint("player2");
+    	    	tennisGame.wonPoint("lily");
     	    }
     	    System.out.println(tennisGame.getLiteralScore());
     	}
