@@ -115,16 +115,13 @@ public class TennisGameImpl implements TennisGame {
         public void SetDeuce() {
             score.SetDeuce();
         }
-
     }
 
-    private int m_score1 = 0;
-    private int m_score2 = 0;
     private Player player1;
     private Player player2;
-    // game sate caching
+    
+    // game inner state variables
     private boolean isDeuce = false;
-
     private boolean isEnd = false;
     
     public TennisGameImpl(String player1Name, String Player2Name) {
@@ -164,9 +161,7 @@ public class TennisGameImpl implements TennisGame {
         else {
             nonDeuceWonPoint(playerToAdvance, otherPlayer);
         }
-        // logic : if deuce, do deuce logic, else 
 
-        
     }
     private void nonDeuceWonPoint(Player toAdvance, Player other) {
         toAdvance.AdvanceScore();
@@ -191,7 +186,6 @@ public class TennisGameImpl implements TennisGame {
     }
 
     public String getLiteralScore() {
-        String score = "";
         if (isEnd)
         {
             if (player1.GetScore() == ScoreType.WIN)
