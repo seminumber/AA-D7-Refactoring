@@ -14,32 +14,32 @@ public class TennisGameImpl implements TennisGame {
         private boolean deuce = false;
         private boolean advantage = false;
 
-        public void Reset() {
+        public void reset() {
             score = ScoreType.LOVE;
             deuce = false;
             advantage = false;
         }
-        public void SetDeuce() {
+        public void setDeuce() {
             deuce = true;
         }
-        public void SetAdvantage() {
+        public void setAdvantage() {
             if (!deuce)
                 throw new UnsupportedOperationException();
             advantage = true;
         }
-        public void ResetAdvantage() {
+        public void resetAdvantage() {
             advantage = false;
         }
 
-        public boolean IsAdvantage() {
+        public boolean isAdvantage() {
             return advantage;
         }
 
-        public ScoreType GetScoreValue() {
+        public ScoreType getScoreValue() {
             return this.score;
         }
         
-        public void Advance() {
+        public void advance() {
             // increase score by one
             if (score == ScoreType.LOVE)
                 score = ScoreType.FIFTEEN;
@@ -50,7 +50,7 @@ public class TennisGameImpl implements TennisGame {
             else if (score == ScoreType.FOURTY) {
                 // deuce and not advantage
                 if (deuce && (!advantage))
-                    SetAdvantage();
+                    setAdvantage();
                 else
                     score = ScoreType.WIN;
             }
@@ -84,36 +84,36 @@ public class TennisGameImpl implements TennisGame {
             this.name = name;
         }
 
-        public void ResetScore() {
-            score.Reset();
+        public void resetScore() {
+            score.reset();
         }
 
-        public ScoreType GetScore() {
-            return score.GetScoreValue();
+        public ScoreType getScore() {
+            return score.getScoreValue();
         }
 
-        public String GetName() {
+        public String getName() {
             return name;
         }
 
-        public void AdvanceScore() {
-            score.Advance();
+        public void advanceScore() {
+            score.advance();
         }
 
-        public boolean IsAdvantage() {
-            return score.IsAdvantage();
+        public boolean isAdvantage() {
+            return score.isAdvantage();
         }
 
-        public void ResetAdvantage() {
-            score.ResetAdvantage();
+        public void resetAdvantage() {
+            score.resetAdvantage();
         }
 
-        public String GetScoreString() {
+        public String getScoreString() {
             return score.toString();
         }
 
-        public void SetDeuce() {
-            score.SetDeuce();
+        public void setDeuce() {
+            score.setDeuce();
         }
     }
 
@@ -127,27 +127,27 @@ public class TennisGameImpl implements TennisGame {
     public TennisGameImpl(String player1Name, String Player2Name) {
         player1 = new Player(player1Name);
         player2 = new Player(Player2Name);
-        player1.ResetScore();
-        player2.ResetScore();
+        player1.resetScore();
+        player2.resetScore();
         isDeuce = false;
     }
 
-    private void SetDeuce() {
+    private void setDeuce() {
         isDeuce = true;
-        player1.SetDeuce();
-        player2.SetDeuce();
+        player1.setDeuce();
+        player2.setDeuce();
     }
 
-    public void Reset() {
-        player1.ResetScore();
-        player2.ResetScore();
+    public void reset() {
+        player1.resetScore();
+        player2.resetScore();
         isDeuce = false;
     }
 
     public void wonPoint(String playerName) {
         Player playerToAdvance;
         Player otherPlayer;
-        if (player1.GetName() == playerName) {
+        if (player1.getName() == playerName) {
             playerToAdvance = player1;
             otherPlayer = player2;
         }
@@ -155,30 +155,30 @@ public class TennisGameImpl implements TennisGame {
             playerToAdvance = player2;
             otherPlayer = player1;
         }
-        if (isDeuce) {
-            deuceWonPoint(playerToAdvance, otherPlayer);
+        if (isDeuce()) {
+            wonPointWhenDeuce(playerToAdvance, otherPlayer);
         }
         else {
-            nonDeuceWonPoint(playerToAdvance, otherPlayer);
+            wonPointWhenNotDeuce(playerToAdvance, otherPlayer);
         }
 
     }
-    private void nonDeuceWonPoint(Player toAdvance, Player other) {
-        toAdvance.AdvanceScore();
-        if (toAdvance.GetScore() == ScoreType.FOURTY && other.GetScore() == ScoreType.FOURTY)
-            SetDeuce();
-        if (toAdvance.GetScore() == ScoreType.WIN)
+    private void wonPointWhenNotDeuce(Player toAdvance, Player other) {
+        toAdvance.advanceScore();
+        if (toAdvance.getScore() == ScoreType.FOURTY && other.getScore() == ScoreType.FOURTY)
+            setDeuce();
+        if (toAdvance.getScore() == ScoreType.WIN)
         {
             isDeuce = false;
             isEnd = true;
         }
     }
-    private void deuceWonPoint(Player toAdvance, Player other) {
-        if (other.IsAdvantage())
-            other.ResetAdvantage();
+    private void wonPointWhenDeuce(Player toAdvance, Player other) {
+        if (other.isAdvantage())
+            other.resetAdvantage();
         else
-            toAdvance.AdvanceScore();
-        if (toAdvance.GetScore() == ScoreType.WIN)
+            toAdvance.advanceScore();
+        if (toAdvance.getScore() == ScoreType.WIN)
         {
             isDeuce = false;
             isEnd = true;
@@ -186,27 +186,31 @@ public class TennisGameImpl implements TennisGame {
     }
 
     public String getLiteralScore() {
-        if (isEnd)
+        if (isEnd())
         {
-            if (player1.GetScore() == ScoreType.WIN)
-                return "Win for " + player1.GetName();
+            if (player1.getScore() == ScoreType.WIN)
+                return "Win for " + player1.getName();
             else
-                return "Win for " + player2.GetName();
+                return "Win for " + player2.getName();
         }
-        else if (isDeuce) {
-            if (player1.IsAdvantage())
-                return "Advantage " + player1.GetName();
-            else if (player2.IsAdvantage())
-                return "Advantage " + player2.GetName();
+        else if (isDeuce()) {
+            if (player1.isAdvantage())
+                return "Advantage " + player1.getName();
+            else if (player2.isAdvantage())
+                return "Advantage " + player2.getName();
             else
                 return "Deuce";
         }
         else {
-            if (player1.GetScore() == player2.GetScore())
-                return player1.GetScoreString() + "-All";
+            if (player1.getScore() == player2.getScore())
+                return player1.getScoreString() + "-All";
             else
-                return player1.GetScoreString() + "-" + player2.GetScoreString();
+                return player1.getScoreString() + "-" + player2.getScoreString();
         }
+    }
+
+    private boolean isDeuce() {
+        return isDeuce;
     }
     
     public boolean isEnd() {
